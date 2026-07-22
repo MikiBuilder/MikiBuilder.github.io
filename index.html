@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Miguel — Backend & DevOps Consultant</title>
+<meta name="description" content="Miguel — consultoría backend, Docker y formación técnica. +20 años construyendo sistemas con PHP/Symfony.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0e1620;
+    --surface: #141d29;
+    --surface-2: #1b2634;
+    --border: #263544;
+    --text: #e7edf2;
+    --muted: #7d90a3;
+    --teal: #4fd1c5;
+    --amber: #f0b429;
+    --red: #ef6a6a;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --sans: 'Inter', system-ui, sans-serif;
+  }
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.55;
+    background-image:
+      radial-gradient(circle at 15% 10%, rgba(79,209,197,0.06), transparent 40%),
+      radial-gradient(circle at 85% 0%, rgba(240,180,41,0.05), transparent 35%);
+  }
+  a{ color: var(--teal); text-decoration: none; }
+  a:hover{ text-decoration: underline; }
+  a:focus-visible, button:focus-visible{ outline: 2px solid var(--teal); outline-offset: 3px; }
+
+  .wrap{ max-width: 760px; margin: 0 auto; padding: 64px 24px 96px; }
+
+  /* Terminal window chrome, reused for hero and repo list */
+  .term{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px -20px rgba(0,0,0,0.6);
+  }
+  .term + .term{ margin-top: 28px; }
+  .term-bar{
+    display:flex; align-items:center; gap:8px;
+    padding: 10px 14px;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .dot{ width:10px; height:10px; border-radius:50%; display:inline-block; }
+  .dot.r{ background:#ef6a6a44; border:1px solid #ef6a6a88; }
+  .dot.y{ background:#f0b42944; border:1px solid #f0b42988; }
+  .dot.g{ background:#4fd1c544; border:1px solid #4fd1c588; }
+  .term-title{ margin-left: 8px; }
+  .term-body{ padding: 22px 22px 26px; font-family: var(--mono); font-size: 14.5px; }
+
+  .prompt{ color: var(--muted); }
+  .prompt .path{ color: var(--teal); }
+  .cmd{ color: var(--text); }
+  .out{ margin: 10px 0 18px 0; color: var(--text); }
+  .out .lead{ font-size: 20px; font-weight: 600; color: #fff; margin: 0 0 6px; font-family: var(--sans); }
+  .out .role{ color: var(--amber); }
+  .out p{ margin: 8px 0; color: var(--text); font-family: var(--sans); font-size: 15px; }
+  .tags{ display:flex; flex-wrap:wrap; gap:8px; margin: 14px 0 4px; }
+  .tag{
+    font-family: var(--mono); font-size: 12px; color: var(--teal);
+    border: 1px solid #4fd1c53a; background: #4fd1c50f;
+    padding: 3px 9px; border-radius: 5px;
+  }
+  .cursor{ display:inline-block; width:8px; height:16px; background: var(--teal); margin-left:2px; animation: blink 1s step-end infinite; vertical-align: -3px; }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  .links{ margin-top: 20px; display:flex; gap: 18px; flex-wrap: wrap; font-family: var(--mono); font-size: 14px;}
+  .links a{ color: var(--text); border-bottom: 1px dashed var(--border); padding-bottom: 2px; }
+  .links a:hover{ color: var(--teal); border-color: var(--teal); text-decoration:none; }
+
+  h2.section-label{
+    font-family: var(--mono); font-size: 13px; letter-spacing: .04em;
+    color: var(--muted); margin: 0 0 4px; text-transform: none;
+  }
+  h2.section-label .cmd{ color: var(--amber); }
+
+  .repo-list{ display:flex; flex-direction:column; }
+  .repo{
+    display:flex; justify-content: space-between; align-items: baseline; gap: 16px;
+    padding: 12px 0; border-bottom: 1px solid var(--border);
+  }
+  .repo:last-child{ border-bottom:none; }
+  .repo-main{ min-width:0; }
+  .repo-name{ font-family: var(--mono); font-size: 15px; color: var(--text); font-weight:600; }
+  .repo-name .arrow{ color: var(--muted); font-weight: 400; }
+  .repo-desc{ font-family: var(--sans); color: var(--muted); font-size: 13.5px; margin-top: 3px; }
+  .repo-meta{ font-family: var(--mono); font-size: 12px; color: var(--muted); white-space: nowrap; text-align:right; }
+  .repo-meta .lang{ color: var(--amber); }
+  .state{ font-family: var(--mono); font-size: 13px; color: var(--muted); padding: 6px 0; }
+  .state.error{ color: var(--red); }
+
+  footer{ margin-top: 40px; text-align:center; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  footer a{ color: var(--muted); }
+  footer a:hover{ color: var(--teal); }
+
+  @media (max-width: 560px){
+    .wrap{ padding: 40px 16px 64px; }
+    .term-body{ padding: 18px; font-size: 13.5px; }
+    .repo{ flex-direction: column; }
+    .repo-meta{ text-align:left; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .cursor{ animation: none; opacity: 1; }
+    html{ scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <div class="term">
+      <div class="term-bar">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span class="term-title">miguel@consultoria — zsh</span>
+      </div>
+      <div class="term-body">
+        <div class="prompt">visitante@web <span class="path">~</span> $ <span class="cmd">whoami</span></div>
+        <div class="out">
+          <p class="lead">Miguel <span class="role">— Backend &amp; DevOps Consultant</span></p>
+          <p>+20 años de experiencia construyendo y manteniendo sistemas backend en producción, principalmente con PHP/Symfony y Docker. También formo desarrolladores: he enseñado a miles de estudiantes.</p>
+          <p>Actualmente disponible para proyectos de consultoría técnica y formación a medida.</p>
+          <div class="tags">
+            <span class="tag">PHP</span>
+            <span class="tag">Symfony</span>
+            <span class="tag">Docker</span>
+            <span class="tag">Arquitectura backend</span>
+            <span class="tag">Formación técnica</span>
+          </div>
+        </div>
+
+        <div class="prompt">visitante@web <span class="path">~</span> $ <span class="cmd">cat contacto.txt</span><span class="cursor"></span></div>
+        <div class="links">
+          <a href="https://github.com/MikiBuilder" target="_blank" rel="noopener">GitHub</a>
+          <a href="#" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="#" target="_blank" rel="noopener">Malt</a>
+          <a href="mailto:tucorreo@ejemplo.com">Email</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="term">
+      <div class="term-bar">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span class="term-title">miguel@consultoria — proyectos</span>
+      </div>
+      <div class="term-body">
+        <h2 class="section-label"><span class="prompt">$</span> <span class="cmd">gh repo list MikiBuilder --public --sort updated</span></h2>
+        <div id="repos" class="repo-list" style="margin-top:14px;">
+          <div class="state" id="repo-state">cargando repositorios…</div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      generado con GitHub Pages · última actualización automática de repos vía GitHub API
+    </footer>
+  </div>
+
+<script>
+(function () {
+  const USERNAME = "MikiBuilder";
+  const listEl = document.getElementById("repos");
+  const stateEl = document.getElementById("repo-state");
+
+  fetch(`https://api.github.com/users/${USERNAME}/repos?per_page=100&sort=updated`)
+    .then(res => {
+      if (!res.ok) throw new Error("GitHub API respondió " + res.status);
+      return res.json();
+    })
+    .then(repos => {
+      const visible = repos.filter(r => !r.fork).sort((a, b) => new Date(b.pushed_at) - new Date(a.pushed_at));
+      if (visible.length === 0) {
+        stateEl.textContent = "sin repositorios públicos todavía.";
+        return;
+      }
+      stateEl.remove();
+      visible.forEach(r => {
+        const row = document.createElement("div");
+        row.className = "repo";
+        row.innerHTML = `
+          <div class="repo-main">
+            <div class="repo-name"><a href="${r.html_url}" target="_blank" rel="noopener">${r.name}</a> <span class="arrow">→</span></div>
+            <div class="repo-desc">${r.description ? escapeHtml(r.description) : "sin descripción"}</div>
+          </div>
+          <div class="repo-meta">
+            ${r.language ? `<span class="lang">${r.language}</span> · ` : ""}★ ${r.stargazers_count}
+          </div>
+        `;
+        listEl.appendChild(row);
+      });
+    })
+    .catch(err => {
+      stateEl.textContent = "no se pudieron cargar los repositorios (" + err.message + ").";
+      stateEl.classList.add("error");
+    });
+
+  function escapeHtml(str) {
+    const div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+  }
+})();
+</script>
+</body>
+</html>
